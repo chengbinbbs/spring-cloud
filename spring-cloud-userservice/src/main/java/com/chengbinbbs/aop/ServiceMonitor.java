@@ -30,10 +30,11 @@ public class ServiceMonitor {
     }
 
     @Around("execution(* com.chengbinbbs.controller.*.*(..))")
-    public void latencyService(ProceedingJoinPoint pjp) throws Throwable {
+    public Object latencyService(ProceedingJoinPoint pjp) throws Throwable {
         long start = System.currentTimeMillis();
-        pjp.proceed();
+        Object obj = pjp.proceed();
         long end = System.currentTimeMillis();
         gaugeService.submit(pjp.getSignature().toString(), end - start);
+        return obj;
     }
 }
